@@ -65,5 +65,36 @@ Vertex* LoadOBJ::GetVertices()
             }
         }
     }
+
+    UVTexture* Texture = new UVTexture[size];
+    i = 0;
+    while (std::getline(data, line))
+    {
+        std::stringstream lineArray(line);
+        std::string word;
+        int sek = 0;
+        float y = 0;
+        float x = 0;
+        while (lineArray >> word) {
+            if (sek == 2)
+            {
+                y = std::stof(word);
+                Texture[i] = UVTexture{ glm::vec2(x,y) };
+                i++;
+                sek = 0;
+            }
+            if (sek == 1)
+            {
+
+                x = std::stof(word);
+                sek++;
+            }
+            if (word == "vt")
+            {
+                sek++;
+            }
+        }
+    }
+    std::cout << Texture[0].UVTexture.y << std::endl;
     return vertices;
 }

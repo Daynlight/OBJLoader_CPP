@@ -4,11 +4,20 @@
 #include <sstream>
 #include <string>
 #include <iostream>
-#include "Lib/include/glm/gtx/string_cast.hpp"
+#include "LIB/include/glm/gtx/string_cast.hpp"
 
 struct Vertex
 {
 	glm::vec3 Position;
+};
+struct UVTexture
+{
+	glm::vec2 UVTexture;
+};
+struct vertices
+{
+	glm::vec3 Pos;
+	glm::vec2 Tex;
 };
 
 class LoadOBJ
