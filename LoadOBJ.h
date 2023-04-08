@@ -30,7 +30,7 @@ class LoadOBJ
 public:
 	LoadOBJ(const char* File);
 	void GetIndices();
-	Vertex* GetVertices();
+	Vec* GetVertices();
 
 	int size = 0;
 	const char* DataFile;

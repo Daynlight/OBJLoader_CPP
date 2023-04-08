@@ -25,7 +25,7 @@ void LoadOBJ::GetIndices()
 {
 }
 
-Vertex* LoadOBJ::GetVertices()
+Vec* LoadOBJ::GetVertices()
 {
     std::ifstream data(DataFile);
     std::string line;
@@ -122,10 +122,6 @@ Vertex* LoadOBJ::GetVertices()
         vec[i] = Vec({ vertices[i].Position,Texture[i].UVTexture,Normal[i].Normals});
     }
 
-   
-    std::cout << vec[0].Nor.z << std::endl;
 
-
-
-    return vertices;
+    return vec;
 }
