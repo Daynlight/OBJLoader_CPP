@@ -24,7 +24,7 @@ struct Vec
 	glm::vec2 Tex;
 	glm::vec3 Nor;
 };
-
+ 
 class LoadOBJ
 {
 public:
