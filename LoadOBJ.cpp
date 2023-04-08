@@ -97,14 +97,14 @@ Vec* LoadOBJ::GetVertices()
 
             if (sekTex == 2)
             {
-                x = std::stof(word);
+                y = std::stof(word);
                 Texture[itex] = UVTexture{ glm::vec2(x,y) };
                 itex++;
                 sekTex = 0;
             }
             if (sekTex == 1)
             {
-                y = std::stof(word);
+                x = std::stof(word);
                 sekTex++;
             }
             if (word == "vt")
@@ -125,15 +125,15 @@ Vec* LoadOBJ::GetVertices()
                 std::stringstream wordArray(word);
                 std::string wordFormat;
                 int wordsek = 0;
-                int id = 1;
-                int texid = 1;
-                int normalid = 1;
+                int id = 0;
+                int texid = 0;
+                int normalid = 0;
                 while (wordArray >> wordFormat)
                 {
                    
                     if (wordsek == 2)
                     {
-                        normalid = std::stoi(wordFormat);
+                        normalid = std::stoi(wordFormat)-1;
                         Format[id].normalid = normalid;
                         Format[id].textureid = texid;
                         
@@ -141,7 +141,7 @@ Vec* LoadOBJ::GetVertices()
                     }
                     if (wordsek == 1)
                     {
-                        texid= std::stoi(wordFormat);
+                        texid= std::stoi(wordFormat)-1;
                         wordsek++;
                     }
                     if (wordsek == 0)
@@ -160,14 +160,11 @@ Vec* LoadOBJ::GetVertices()
             }
         }
     }
-    //std::cout << Format[1].normalid << std::endl;
     Vec* vec = new Vec[size];
-    std::cout << Format[0].textureid << std::endl;
     for (int i = 0; i < size; i++)
     {
-        vec[i] = Vec({ vertices[i].Position,Texture[i].UVTexture,Normal[i].Normals});
+        vec[i] = Vec({ vertices[i].Position,Texture[Format[i].textureid].UVTexture,Normal[Format[i].normalid].Normals});
     }
-
 
     return vec;
 }
