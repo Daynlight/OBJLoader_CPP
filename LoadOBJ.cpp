@@ -45,11 +45,7 @@ Vec* LoadOBJ::GetVertices()
         float z = 0;
         float y = 0;
         float x = 0;
-        float d = 0;
-        float c = 0;
-        float e = 0;
-        float a = 0;
-        float b = 0;
+
         while (lineArray >> word) {
             if (sek == 3)
             {
@@ -76,19 +72,19 @@ Vec* LoadOBJ::GetVertices()
 
             if (sekNor == 3)
             {
-                e = std::stof(word);
-                Normal[inor] = Normals{ glm::vec3(c,d,e) };
+                z = std::stof(word);
+                Normal[inor] = Normals{ glm::vec3(x,y,z) };
                 inor++;
                 sekNor = 0;
             }
             if (sekNor == 2)
             {
-                d = std::stof(word);
+                y = std::stof(word);
                 sekNor++;
             }
             if (sekNor == 1)
             {
-                c = std::stof(word);
+                z = std::stof(word);
                 sekNor++;
             }
             if (word == "vn")
@@ -98,14 +94,14 @@ Vec* LoadOBJ::GetVertices()
 
             if (sekTex == 2)
             {
-                b = std::stof(word);
-                Texture[itex] = UVTexture{ glm::vec2(a,b) };
+                x = std::stof(word);
+                Texture[itex] = UVTexture{ glm::vec2(x,y) };
                 itex++;
                 sekTex = 0;
             }
             if (sekTex == 1)
             {
-                a = std::stof(word);
+                y = std::stof(word);
                 sekTex++;
             }
             if (word == "vt")
