@@ -131,14 +131,12 @@
   <ItemGroup>
     <ClCompile Include="Example\LoadOBJ.cpp" />
     <ClCompile Include="Example\main.cpp" />
-    <ClCompile Include="main.cpp" />
     <ClCompile Include="LoadOBJ.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Example\LoadOBJ.h" />
     <ClInclude Include="Example\main.h" />
     <ClInclude Include="LoadOBJ.h" />
-    <ClInclude Include="main.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
