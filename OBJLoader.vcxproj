@@ -127,7 +127,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="LoadOBJ.cpp" />
+    <ClCompile Include="main.cpp" />
     <ClCompile Include="OBJLoader.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="LoadOBJ.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
