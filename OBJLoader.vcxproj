@@ -18,18 +18,10 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="LoadOBJ.cpp" />
-    <ClCompile Include="main.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="LoadOBJ.h" />
-    <ClInclude Include="main.h" />
-  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{710af5d6-4d81-425b-9aa4-ba819ba65842}</ProjectGuid>
+    <ProjectGuid>{39b8c866-65e3-4722-bed6-ddc6721a6757}</ProjectGuid>
     <RootNamespace>OBJLoader</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
@@ -134,19 +126,9 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
-<<<<<<< HEAD:OBJLoader.vcxproj
-=======
   <ItemGroup>
-    <ClCompile Include="Example\LoadOBJ.cpp" />
-    <ClCompile Include="Example\main.cpp" />
-    <ClCompile Include="LoadOBJ.cpp" />
+    <ClCompile Include="OBJLoader.cpp" />
   </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="Example\LoadOBJ.h" />
-    <ClInclude Include="Example\main.h" />
-    <ClInclude Include="LoadOBJ.h" />
-  </ItemGroup>
->>>>>>> master:ConsoleApplication1.vcxproj
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
