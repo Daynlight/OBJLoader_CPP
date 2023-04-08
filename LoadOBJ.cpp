@@ -32,42 +32,45 @@ Vec* LoadOBJ::GetVertices()
     Vertex* vertices = new Vertex[size];
     UVTexture* Texture = new UVTexture[size];
     Normals* Normal = new Normals[size];
+    FormatBlock* Format = new FormatBlock[size];
     int i = 0;
     int itex = 0;
     int inor = 0;
+    int ifor = 0;
     while (std::getline(data, line))
     {
         std::stringstream lineArray(line);
         std::string word;
-        int sek = 0;
+        int sekVert = 0;
         int sekTex = 0;
         int sekNor = 0;
+        int sekFormat = 0;
         float z = 0;
         float y = 0;
         float x = 0;
 
         while (lineArray >> word) {
-            if (sek == 3)
+            if (sekVert == 3)
             {
                  z = std::stof(word);
                  vertices[i] = Vertex{ glm::vec3(x,y,z) };
                  i++;
-                 sek = 0;
+                 sekVert = 0;
             }
-            if (sek == 2)
+            if (sekVert == 2)
             {
                 y = std::stof(word);
-                sek++;
+                sekVert++;
             }
-            if (sek == 1)
+            if (sekVert == 1)
             {
                
                 x = std::stof(word);
-                sek++;
+                sekVert++;
             }
             if (word == "v")
             {
-                sek++;
+                sekVert++;
             }
 
             if (sekNor == 3)
@@ -108,11 +111,58 @@ Vec* LoadOBJ::GetVertices()
             {
                 sekTex++;
             }
+
+
+            if (sekFormat == 1 || sekFormat == 2 || sekFormat == 3)
+            {
+                for (int i = 0; i < word.length(); i++)
+                {
+                    if (word[i] == '/') 
+                    {
+                        word[i] = ' ';
+                    }
+                }
+                std::stringstream wordArray(word);
+                std::string wordFormat;
+                int wordsek = 0;
+                int id = 1;
+                int texid = 1;
+                int normalid = 1;
+                while (wordArray >> wordFormat)
+                {
+                   
+                    if (wordsek == 2)
+                    {
+                        normalid = std::stoi(wordFormat);
+                        Format[id].normalid = normalid;
+                        Format[id].textureid = texid;
+                        
+                        wordsek = 0;
+                    }
+                    if (wordsek == 1)
+                    {
+                        texid= std::stoi(wordFormat);
+                        wordsek++;
+                    }
+                    if (wordsek == 0)
+                    {
+                        id = std::stoi(wordFormat)-1;
+                        
+                        wordsek++;
+                    } 
+                }
+                if (sekFormat == 3) sekFormat = 0;
+                else sekFormat++;
+            }
+            if (word == "f")
+            {
+                sekFormat++;
+            }
         }
     }
-
+    //std::cout << Format[1].normalid << std::endl;
     Vec* vec = new Vec[size];
-
+    std::cout << Format[0].textureid << std::endl;
     for (int i = 0; i < size; i++)
     {
         vec[i] = Vec({ vertices[i].Position,Texture[i].UVTexture,Normal[i].Normals});

@@ -18,6 +18,11 @@ struct Normals
 {
 	glm::vec3 Normals;
 };
+struct FormatBlock
+{
+	int normalid;
+	int textureid;
+};
 struct Vec
 {
 	glm::vec3 Pos;
