@@ -32,13 +32,13 @@ int* LoadOBJ::GetIndices()
         std::string word;
         while (lineArray >> word) 
         {
-            if (word == "f") VerticesSize += 3;
+            if (word == "f") IndiesSize += 3;
         }
         
     }
     datasize.close();
     std::ifstream data(DataFile);
-    int* Indies = new int[VerticesSize];
+    int* Indies = new int[IndiesSize];
     int id = 0;
     while (std::getline(data, line))
     {
