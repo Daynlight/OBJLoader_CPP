@@ -14,7 +14,7 @@ LoadOBJ::LoadOBJ(const char* File)
         while (lineArray >> word) {
             if (word == "v")
             {
-                size++;
+                VerticesSize++;
             }
         }
     }
@@ -26,20 +26,19 @@ int* LoadOBJ::GetIndices()
     std::ifstream datasize(DataFile);
     std::string line;
     int sekIndies = 0;
-    int indsize = 0;
     while (std::getline(datasize, line))
     {
         std::stringstream lineArray(line);
         std::string word;
         while (lineArray >> word) 
         {
-            if (word == "f") indsize += 3;
+            if (word == "f") VerticesSize += 3;
         }
         
     }
     datasize.close();
     std::ifstream data(DataFile);
-    int* Indies = new int[indsize];
+    int* Indies = new int[VerticesSize];
     int id = 0;
     while (std::getline(data, line))
     {
@@ -87,10 +86,10 @@ Vec* LoadOBJ::GetVertices()
 {
     std::ifstream data(DataFile);
     std::string line;
-    Vertex* vertices = new Vertex[size]; 
-    UVTexture* Texture = new UVTexture[size];
-    Normals* Normal = new Normals[size];
-    FormatBlock* Format = new FormatBlock[size];
+    Vertex* vertices = new Vertex[VerticesSize];
+    UVTexture* Texture = new UVTexture[VerticesSize];
+    Normals* Normal = new Normals[VerticesSize];
+    FormatBlock* Format = new FormatBlock[VerticesSize];
     int i = 0;
     int itex = 0;
     int inor = 0;
@@ -219,8 +218,8 @@ Vec* LoadOBJ::GetVertices()
         }
     }
     data.close();
-    Vec* vec = new Vec[size];
-    for (int i = 0; i < size; i++)
+    Vec* vec = new Vec[VerticesSize];
+    for (int i = 0; i < VerticesSize; i++)
     {
         vec[i] = Vec({ vertices[i].Position,Texture[Format[i].textureid].UVTexture,Normal[Format[i].normalid].Normals});
     }

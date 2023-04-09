@@ -37,7 +37,8 @@ public:
 	int* GetIndices();
 	Vec* GetVertices();
 
-	int size = 0;
+	int VerticesSize = 0;
+	int IndiesSize = 0;
 	const char* DataFile;
 };
 
