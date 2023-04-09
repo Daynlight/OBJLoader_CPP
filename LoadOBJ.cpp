@@ -3,16 +3,16 @@
 
 LoadOBJ::LoadOBJ(const char* File)
 {
-    DataFile = File;
-	std::ifstream data(DataFile);
-	std::string line;
+    FilePath = File;
+	std::ifstream Data(FilePath);
+	std::string Line;
     
-    while (std::getline(data, line))
+    while (std::getline(Data, Line))
     {
-        std::stringstream lineArray(line);
-        std::string word;
-        while (lineArray >> word) {
-            if (word == "v")
+        std::stringstream LineArray(Line);
+        std::string Word;
+        while (LineArray >> Word) {
+            if (Word == "v")
             {
                 VerticesSize++;
             }
@@ -21,208 +21,170 @@ LoadOBJ::LoadOBJ(const char* File)
 
 }
 
-int* LoadOBJ::GetIndices()
+int* LoadOBJ::Indices()
 {
-    std::ifstream datasize(DataFile);
-    std::string line;
-    int sekIndies = 0;
-    while (std::getline(datasize, line))
+    std::ifstream DataSize(FilePath);
+    std::string Line;
+    int IndicesOrganise = 0;
+    while (std::getline(DataSize, Line))
     {
-        std::stringstream lineArray(line);
-        std::string word;
-        while (lineArray >> word) 
-        {
-            if (word == "f") IndiesSize += 3;
-        }
-        
+        std::stringstream LineArray(Line);
+        std::string Word;
+        while (LineArray >> Word) if (Word == "f") IndicesSize += 3;
     }
-    datasize.close();
-    std::ifstream data(DataFile);
-    int* Indies = new int[IndiesSize];
-    int id = 0;
-    while (std::getline(data, line))
+    DataSize.close();
+    std::ifstream Data(FilePath);
+    int* Indices = new int[IndicesSize];
+    int ID = 0;
+    while (std::getline(Data, Line))
     {
-        std::stringstream lineArray(line);
-        std::string word;
-        while (lineArray >> word)
+        std::stringstream LineArray(Line);
+        std::string Word;
+        while (LineArray >> Word)
         {
-            if (sekIndies == 1 || sekIndies==2 || sekIndies==3)
+            if (IndicesOrganise == 1 || IndicesOrganise == 2 || IndicesOrganise == 3)
             {
-                for (int i = 0; i < word.length(); i++)
+                for (int i = 0; i < Word.length(); i++) if (Word[i] == '/') Word[i] = ' ';
+                std::stringstream WordArray(Word);
+                std::string WordFormat;
+                while (WordArray >> WordFormat)
                 {
-                    if (word[i] == '/')
-                    {
-                        word[i] = ' ';
-                    }
-                }
-                
-                std::stringstream wordArray(word);
-                std::string wordFormat;
-                int wordsek = 0;
-                
-                while (wordArray >> wordFormat)
-                {
-                    Indies[id] = std::stoi(wordFormat);
-                    id++;
+                    Indices[ID] = std::stoi(WordFormat);
+                    ID++;
                     break;
                 }
-                if (sekIndies == 3)sekIndies = 0;
-                else sekIndies++;
+                if (IndicesOrganise == 3) IndicesOrganise = 0; else IndicesOrganise++;
             }
 
-            if (word == "f")
+            if (Word == "f")
             {
-                sekIndies++; 
+                IndicesOrganise++;
             }
-           
         }
        
     }
-    data.close();
-    return Indies;
+    Data.close();
+    return Indices;
 }
 
-Vec* LoadOBJ::GetVertices()
+VectexArray* LoadOBJ::Vertices()
 {
-    std::ifstream data(DataFile);
-    std::string line;
-    Vertex* vertices = new Vertex[VerticesSize];
+    std::ifstream Data(FilePath);
+    std::string Line;
+    Vertex* Vertices = new Vertex[VerticesSize];
     UVTexture* Texture = new UVTexture[VerticesSize];
     Normals* Normal = new Normals[VerticesSize];
-    FormatBlock* Format = new FormatBlock[VerticesSize];
-    int i = 0;
-    int itex = 0;
-    int inor = 0;
-    int ifor = 0;
-    while (std::getline(data, line))
+    FormatStatment* Format = new FormatStatment[VerticesSize];
+    int VerticesID = 0;
+    int TextureID = 0;
+    int NormalsID = 0;
+    int FormatID = 0;
+    while (std::getline(Data, Line))
     {
-        std::stringstream lineArray(line);
-        std::string word;
-        int sekVert = 0;
-        int sekTex = 0;
-        int sekNor = 0;
-        int sekFormat = 0;
-        float z = 0;
-        float y = 0;
+        std::stringstream LineArray(Line);
+        std::string Word;
+        int VerticesOrganise = 0;
+        int TextureOrganise = 0;
+        int NormalsOrganise = 0;
+        int FormatOrganise = 0;
         float x = 0;
+        float y = 0;
+        float z = 0;
 
-        while (lineArray >> word) {
-            if (sekVert == 3)
+        while (LineArray >> Word) {
+            if (VerticesOrganise == 3)
             {
-                 z = std::stof(word);
-                 vertices[i] = Vertex{ glm::vec3(x,y,z) };
-                 i++;
-                 sekVert = 0;
+                 z = std::stof(Word);
+                 Vertices[VerticesID] = Vertex{ glm::vec3(x,y,z) };
+                 VerticesID++;
+                 VerticesOrganise = 0;
             }
-            if (sekVert == 2)
+            if (VerticesOrganise == 2)
             {
-                y = std::stof(word);
-                sekVert++;
+                y = std::stof(Word);
+                VerticesOrganise++;
             }
-            if (sekVert == 1)
+            if (VerticesOrganise == 1)
             {
-               
-                x = std::stof(word);
-                sekVert++;
+                x = std::stof(Word);
+                VerticesOrganise++;
             }
-            if (word == "v")
-            {
-                sekVert++;
-            }
+            if (Word == "v") VerticesOrganise++;
 
-            if (sekNor == 3)
+            if (NormalsOrganise == 3)
             {
-                z = std::stof(word);
-                Normal[inor] = Normals{ glm::vec3(x,y,z) };
-                inor++;
-                sekNor = 0;
+                z = std::stof(Word);
+                Normal[NormalsID] = Normals{ glm::vec3(x,y,z) };
+                NormalsID++;
+                NormalsOrganise = 0;
             }
-            if (sekNor == 2)
+            if (NormalsOrganise == 2)
             {
-                y = std::stof(word);
-                sekNor++;
+                y = std::stof(Word);
+                NormalsOrganise++;
             }
-            if (sekNor == 1)
+            if (NormalsOrganise == 1)
             {
-                z = std::stof(word);
-                sekNor++;
+                z = std::stof(Word);
+                NormalsOrganise++;
             }
-            if (word == "vn")
-            {
-                sekNor++;
-            }
+            if (Word == "vn") NormalsOrganise++;
 
-            if (sekTex == 2)
+            if (TextureOrganise == 2)
             {
-                y = std::stof(word);
-                Texture[itex] = UVTexture{ glm::vec2(x,y) };
-                itex++;
-                sekTex = 0;
+                y = std::stof(Word);
+                Texture[TextureID] = UVTexture{ glm::vec2(x,y) };
+                TextureID++;
+                TextureOrganise = 0;
             }
-            if (sekTex == 1)
+            if (TextureOrganise == 1)
             {
-                x = std::stof(word);
-                sekTex++;
+                x = std::stof(Word);
+                TextureOrganise++;
             }
-            if (word == "vt")
-            {
-                sekTex++;
-            }
+            if (Word == "vt") TextureOrganise++;
 
-
-            if (sekFormat == 1 || sekFormat == 2 || sekFormat == 3)
+            if (FormatOrganise == 1 || FormatOrganise == 2 || FormatOrganise == 3)
             {
-                for (int i = 0; i < word.length(); i++)
-                {
-                    if (word[i] == '/') 
-                    {
-                        word[i] = ' ';
-                    }
-                }
-                std::stringstream wordArray(word);
-                std::string wordFormat;
-                int wordsek = 0;
-                int id = 0;
-                int texid = 0;
-                int normalid = 0;
-                while (wordArray >> wordFormat)
+                for (int i = 0; i < Word.length(); i++) if (Word[i] == '/') Word[i] = ' ';
+                std::stringstream WordArray(Word);
+                std::string WordFormat;
+                int WordOrganise = 0;
+                int ID = 0;
+                int TextureFormatID = 0;
+                int NormalsFormatID = 0;
+                while (WordArray >> WordFormat)
                 {
                    
-                    if (wordsek == 2)
+                    if (WordOrganise == 2)
                     {
-                        normalid = std::stoi(wordFormat)-1;
-                        Format[id].normalid = normalid;
-                        Format[id].textureid = texid;
-                        
-                        wordsek = 0;
+                        NormalsFormatID = std::stoi(WordFormat) - 1;
+                        Format[ID].NormalID = NormalsFormatID;
+                        Format[ID].TextureID = TextureFormatID;
+                        WordOrganise = 0;
                     }
-                    if (wordsek == 1)
+                    if (WordOrganise == 1)
                     {
-                        texid= std::stoi(wordFormat)-1;
-                        wordsek++;
+                        TextureFormatID= std::stoi(WordFormat) - 1;
+                        WordOrganise++;
                     }
-                    if (wordsek == 0)
+                    if (WordOrganise == 0)
                     {
-                        id = std::stoi(wordFormat)-1;
-                        
-                        wordsek++;
+                        ID = std::stoi(WordFormat) - 1;
+                        WordOrganise++;
                     } 
                 }
-                if (sekFormat == 3) sekFormat = 0;
-                else sekFormat++;
+                if (FormatOrganise == 3) FormatOrganise = 0; else FormatOrganise++;
             }
-            if (word == "f")
-            {
-                sekFormat++;
-            }
+            if (Word == "f") FormatOrganise++;
         }
     }
-    data.close();
-    Vec* vec = new Vec[VerticesSize];
+    Data.close();
+    VectexArray* Vertex = new VectexArray[VerticesSize];
     for (int i = 0; i < VerticesSize; i++)
     {
-        vec[i] = Vec({ vertices[i].Position,Texture[Format[i].textureid].UVTexture,Normal[Format[i].normalid].Normals});
+        Vertex[i] = VectexArray({ Vertices[i].Position,Texture[Format[i].TextureID].UVTexture,Normal[Format[i].NormalID].Normals});
     }
 
-    return vec;
+    return Vertex;
 }

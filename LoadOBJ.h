@@ -1,10 +1,10 @@
 #pragma once
+#include "LIB/include/glm/gtx/string_cast.hpp"
 #include "LIB/include/glm/glm.hpp"
 #include <fstream>
 #include <sstream>
 #include <string>
 #include <iostream>
-#include "LIB/include/glm/gtx/string_cast.hpp"
 
 struct Vertex
 {
@@ -18,27 +18,27 @@ struct Normals
 {
 	glm::vec3 Normals;
 };
-struct FormatBlock
+struct FormatStatment
 {
-	int normalid;
-	int textureid;
+	int NormalID;
+	int TextureID;
 };
-struct Vec
+struct VectexArray
 {
-	glm::vec3 Pos;
-	glm::vec2 Tex;
-	glm::vec3 Nor;
+	glm::vec3 Poses;
+	glm::vec2 Texures;
+	glm::vec3 Normals;
 };
  
 class LoadOBJ
 {
 public:
 	LoadOBJ(const char* File);
-	int* GetIndices();
-	Vec* GetVertices();
+	int* Indices();
+	VectexArray* Vertices();
 
 	int VerticesSize = 0;
-	int IndiesSize = 0;
-	const char* DataFile;
+	int IndicesSize = 0;
+	const char* FilePath;
 };
 
