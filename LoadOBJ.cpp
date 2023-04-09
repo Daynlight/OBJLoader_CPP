@@ -183,7 +183,9 @@ VectexArray* LoadOBJ::Vertices()
     VectexArray* Vertex = new VectexArray[VerticesSize];
     for (int i = 0; i < VerticesSize; i++)
     {
-        Vertex[i] = VectexArray({ Vertices[i].Position,Texture[Format[i].TextureID].UVTexture,Normal[Format[i].NormalID].Normals});
+        int TextureCreateVertexID = Format[i].TextureID;
+        int NormalsCreateVertexID = Format[i].NormalID;
+        Vertex[i] = VectexArray({ Vertices[i].Position,Texture[TextureCreateVertexID].UVTexture,Normal[NormalsCreateVertexID].Normals});
     }
 
     return Vertex;
