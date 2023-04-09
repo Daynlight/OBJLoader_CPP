@@ -21,15 +21,73 @@ LoadOBJ::LoadOBJ(const char* File)
 
 }
 
-void LoadOBJ::GetIndices()
+int* LoadOBJ::GetIndices()
 {
+    std::ifstream datasize(DataFile);
+    std::string line;
+    int sekIndies = 0;
+    int indsize = 0;
+    while (std::getline(datasize, line))
+    {
+        std::stringstream lineArray(line);
+        std::string word;
+        while (lineArray >> word) 
+        {
+            if (word == "f") indsize += 3;
+        }
+        
+    }
+    datasize.close();
+    std::ifstream data(DataFile);
+    int* Indies = new int[indsize];
+    int id = 0;
+    while (std::getline(data, line))
+    {
+        std::stringstream lineArray(line);
+        std::string word;
+        while (lineArray >> word)
+        {
+            if (sekIndies == 1 || sekIndies==2 || sekIndies==3)
+            {
+                for (int i = 0; i < word.length(); i++)
+                {
+                    if (word[i] == '/')
+                    {
+                        word[i] = ' ';
+                    }
+                }
+                
+                std::stringstream wordArray(word);
+                std::string wordFormat;
+                int wordsek = 0;
+                
+                while (wordArray >> wordFormat)
+                {
+                    Indies[id] = std::stoi(wordFormat);
+                    id++;
+                    break;
+                }
+                if (sekIndies == 3)sekIndies = 0;
+                else sekIndies++;
+            }
+
+            if (word == "f")
+            {
+                sekIndies++; 
+            }
+           
+        }
+       
+    }
+    data.close();
+    return Indies;
 }
 
 Vec* LoadOBJ::GetVertices()
 {
     std::ifstream data(DataFile);
     std::string line;
-    Vertex* vertices = new Vertex[size];
+    Vertex* vertices = new Vertex[size]; 
     UVTexture* Texture = new UVTexture[size];
     Normals* Normal = new Normals[size];
     FormatBlock* Format = new FormatBlock[size];
@@ -160,6 +218,7 @@ Vec* LoadOBJ::GetVertices()
             }
         }
     }
+    data.close();
     Vec* vec = new Vec[size];
     for (int i = 0; i < size; i++)
     {

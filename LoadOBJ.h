@@ -34,7 +34,7 @@ class LoadOBJ
 {
 public:
 	LoadOBJ(const char* File);
-	void GetIndices();
+	int* GetIndices();
 	Vec* GetVertices();
 
 	int size = 0;
