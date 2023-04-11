@@ -18,14 +18,8 @@ LoadOBJ::LoadOBJ(const char* File)
             }
         }
     }
-
-}
-
-int* LoadOBJ::Indices()
-{
     std::ifstream DataSize(FilePath);
     std::string Line;
-    int IndicesOrganise = 0;
     while (std::getline(DataSize, Line))
     {
         std::stringstream LineArray(Line);
@@ -33,6 +27,12 @@ int* LoadOBJ::Indices()
         while (LineArray >> Word) if (Word == "f") IndicesSize += 3;
     }
     DataSize.close();
+}
+
+int* LoadOBJ::Indices()
+{
+    std::string Line;
+    int IndicesOrganise = 0;
     std::ifstream Data(FilePath);
     int* Indices = new int[IndicesSize];
     int ID = 0;
