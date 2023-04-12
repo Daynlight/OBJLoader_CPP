@@ -19,7 +19,6 @@ LoadOBJ::LoadOBJ(const char* File)
         }
     }
     std::ifstream DataSize(FilePath);
-    std::string Line;
     while (std::getline(DataSize, Line))
     {
         std::stringstream LineArray(Line);
