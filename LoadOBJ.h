@@ -1,6 +1,7 @@
 #pragma once
-#include "LIB/include/glm/gtx/string_cast.hpp"
-#include "LIB/include/glm/glm.hpp"
+#include "Lib/include/glm/gtx/string_cast.hpp"
+#include "Lib/include/glm/glm.hpp"
+#include "LIB/include/glad/glad.h"
 #include <fstream>
 #include <sstream>
 #include <string>
@@ -29,12 +30,12 @@ struct VectexArray
 	glm::vec2 Texures;
 	glm::vec3 Normals;
 };
- 
+
 class LoadOBJ
 {
 public:
 	LoadOBJ(const char* File);
-	int* Indices();
+	GLuint* Indices();
 	VectexArray* Vertices();
 
 	int VerticesSize = 0;

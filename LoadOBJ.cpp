@@ -4,9 +4,9 @@
 LoadOBJ::LoadOBJ(const char* File)
 {
     FilePath = File;
-	std::ifstream Data(FilePath);
-	std::string Line;
-    
+    std::ifstream Data(FilePath);
+    std::string Line;
+
     while (std::getline(Data, Line))
     {
         std::stringstream LineArray(Line);
@@ -19,21 +19,24 @@ LoadOBJ::LoadOBJ(const char* File)
         }
     }
     std::ifstream DataSize(FilePath);
-    while (std::getline(DataSize, Line))
+    std::string LineSize;
+    while (std::getline(DataSize, LineSize))
     {
-        std::stringstream LineArray(Line);
+        std::stringstream LineArray(LineSize);
         std::string Word;
         while (LineArray >> Word) if (Word == "f") IndicesSize += 3;
     }
-    DataSize.close();
+
 }
 
-int* LoadOBJ::Indices()
+GLuint* LoadOBJ::Indices()
 {
+
     std::string Line;
     int IndicesOrganise = 0;
+
     std::ifstream Data(FilePath);
-    int* Indices = new int[IndicesSize];
+    GLuint* Indices = new GLuint[IndicesSize];
     int ID = 0;
     while (std::getline(Data, Line))
     {
@@ -48,7 +51,7 @@ int* LoadOBJ::Indices()
                 std::string WordFormat;
                 while (WordArray >> WordFormat)
                 {
-                    Indices[ID] = std::stoi(WordFormat);
+                    Indices[ID] = std::stoi(WordFormat) - 1;
                     ID++;
                     break;
                 }
@@ -60,7 +63,7 @@ int* LoadOBJ::Indices()
                 IndicesOrganise++;
             }
         }
-       
+
     }
     Data.close();
     return Indices;
@@ -93,10 +96,10 @@ VectexArray* LoadOBJ::Vertices()
         while (LineArray >> Word) {
             if (VerticesOrganise == 3)
             {
-                 z = std::stof(Word);
-                 Vertices[VerticesID] = Vertex{ glm::vec3(x,y,z) };
-                 VerticesID++;
-                 VerticesOrganise = 0;
+                z = std::stof(Word);
+                Vertices[VerticesID] = Vertex{ glm::vec3(x,y,z) };
+                VerticesID++;
+                VerticesOrganise = 0;
             }
             if (VerticesOrganise == 2)
             {
@@ -154,7 +157,7 @@ VectexArray* LoadOBJ::Vertices()
                 int NormalsFormatID = 0;
                 while (WordArray >> WordFormat)
                 {
-                   
+
                     if (WordOrganise == 2)
                     {
                         NormalsFormatID = std::stoi(WordFormat) - 1;
@@ -164,14 +167,14 @@ VectexArray* LoadOBJ::Vertices()
                     }
                     if (WordOrganise == 1)
                     {
-                        TextureFormatID= std::stoi(WordFormat) - 1;
+                        TextureFormatID = std::stoi(WordFormat) - 1;
                         WordOrganise++;
                     }
                     if (WordOrganise == 0)
                     {
                         ID = std::stoi(WordFormat) - 1;
                         WordOrganise++;
-                    } 
+                    }
                 }
                 if (FormatOrganise == 3) FormatOrganise = 0; else FormatOrganise++;
             }
@@ -184,7 +187,7 @@ VectexArray* LoadOBJ::Vertices()
     {
         int TextureCreateVertexID = Format[i].TextureID;
         int NormalsCreateVertexID = Format[i].NormalID;
-        Vertex[i] = VectexArray({ Vertices[i].Position,Texture[TextureCreateVertexID].UVTexture,Normal[NormalsCreateVertexID].Normals});
+        Vertex[i] = VectexArray({ Vertices[i].Position,Texture[TextureCreateVertexID].UVTexture,Normal[NormalsCreateVertexID].Normals });
     }
 
     return Vertex;
