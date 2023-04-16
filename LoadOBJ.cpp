@@ -1,131 +1,165 @@
-#include "Object.h"
+#include "LoadOBJ.h"
 
 
-void Object::Init(const char* Mesh, const char* TexturePATH, const char* Specular, const char* VarShader, const char* FragShader)
+LoadOBJ::LoadOBJ(const char* File)
 {
-	const char* VertexData;
-	const char* FragmentData;
+    FilePath = File;
+    std::ifstream DataSize(FilePath);
+    std::string Line;
+    while (std::getline(DataSize, Line))
+    {
+        std::stringstream LineArray(Line);
+        std::string Word;
+        while (LineArray >> Word) {
+            if (Word == "v") VerticesSize++;
+            if (Word == "f") IndicesSize += 3;
+            if (Word == "vn") NoramlSize ++;
+            if (Word == "vt") TextureSize ++;
+        }
+    }
+    DataSize.close();
 
-	std::ifstream DataVertex(VarShader);
-	std::string contentVertex;
-	DataVertex.seekg(0, std::ios::end);
-	contentVertex.resize(DataVertex.tellg());
-	DataVertex.seekg(0, std::ios::beg);
-	DataVertex.read(&contentVertex[0], contentVertex.size());
-	DataVertex.close();
-	VertexData = contentVertex.c_str();
+    int IndicesOrganise = 0;
+    std::ifstream Data(FilePath);
 
-	std::ifstream DataFragment(FragShader);
-	std::string contentFragment;
-	DataFragment.seekg(0, std::ios::end);
-	contentFragment.resize(DataFragment.tellg());
-	DataFragment.seekg(0, std::ios::beg);
-	DataFragment.read(&contentFragment[0], contentFragment.size());
-	DataFragment.close();
-	FragmentData = contentFragment.c_str();
+    Indices = new GLuint[IndicesSize];
+    Vertex* Vertices = new Vertex[VerticesSize];
+    UVTexture* Texture = new UVTexture[TextureSize];
+    Normals* Normal = new Normals[NoramlSize];
+    FormatStatment* Format = new FormatStatment[VerticesSize * 2];
+    VertexData = new VectexArray[VerticesSize];
+    int VerticesID = 0;
+    int TextureID = 0;
+    int NormalsID = 0;
+    int FormatID = 0;
+    int ID = 0;
+    while (std::getline(Data, Line))
+    {
+        int VerticesOrganise = 0;
+        int TextureOrganise = 0;
+        int NormalsOrganise = 0;
+        int FormatOrganise = 0;
+        float x = 0;
+        float y = 0;
+        float z = 0;
+        std::stringstream LineArray(Line);
+        std::string Word;
+        while (LineArray >> Word)
+        {
 
-	GLuint vertexShaderProgram = glCreateShader(GL_VERTEX_SHADER);
-	glShaderSource(vertexShaderProgram, 1, &VertexData, NULL);
-	glCompileShader(vertexShaderProgram);
+            if (IndicesOrganise == 1 || IndicesOrganise == 2 || IndicesOrganise == 3)
+            {
+                for (int i = 0; i < Word.length(); i++) if (Word[i] == '/') Word[i] = ' ';
+                std::stringstream WordArray(Word);
+                std::string WordFormat;
+                while (WordArray >> WordFormat)
+                {
+                    Indices[ID] = std::stoi(WordFormat) - 1;
+                    ID++;
+                    break;
+                }
+                if (IndicesOrganise == 3) IndicesOrganise = 0; else IndicesOrganise++;
+            }
 
-	GLuint fragmentShaderProgram = glCreateShader(GL_FRAGMENT_SHADER);
-	glShaderSource(fragmentShaderProgram, 1, &FragmentData, NULL);
-	glCompileShader(fragmentShaderProgram);
+            if (Word == "f")
+            {
+                IndicesOrganise++;
+            }
 
-	this->ShaderProgram = glCreateProgram();
-	glAttachShader(this->ShaderProgram, vertexShaderProgram);
-	glAttachShader(this->ShaderProgram, fragmentShaderProgram);
-	glLinkProgram(this->ShaderProgram);
-	glDeleteShader(vertexShaderProgram);
-	glDeleteShader(fragmentShaderProgram);
+            if (VerticesOrganise == 3)
+            {
+                z = std::stof(Word);
+                Vertices[VerticesID] = Vertex{ glm::vec3(x,y,z) };
+                VerticesID++;
+                VerticesOrganise = 0;
+            }
+            if (VerticesOrganise == 2)
+            {
+                y = std::stof(Word);
+                VerticesOrganise++;
+            }
+            if (VerticesOrganise == 1)
+            {
+                x = std::stof(Word);
+                VerticesOrganise++;
+            }
+            if (Word == "v") VerticesOrganise++;
 
+            if (NormalsOrganise == 3)
+            {
+                z = std::stof(Word);
+                Normal[NormalsID] = Normals{ glm::vec3(x,y,z) };
+                NormalsID++;
+                NormalsOrganise = 0;
+            }
+            if (NormalsOrganise == 2)
+            {
+                y = std::stof(Word);
+                NormalsOrganise++;
+            }
+            if (NormalsOrganise == 1)
+            {
+                z = std::stof(Word);
+                NormalsOrganise++;
+            }
+            if (Word == "vn") NormalsOrganise++;
 
-	if(TexturePATH !="NULL") this->istexture = true;
-	if(this->istexture)
-	{
-		glGenTextures(1, &this->texture);
-		glBindTexture(GL_TEXTURE_2D, this->texture);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		stbi_set_flip_vertically_on_load(true);
-		int ImageWidth, ImageHeight, ImageChannels;
-		unsigned char* data = stbi_load(TexturePATH, &ImageWidth, &ImageHeight, &ImageChannels, 0);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, ImageWidth, ImageHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
-		glGenerateMipmap(GL_TEXTURE_2D);
-		stbi_image_free(data);
-	}
+            if (TextureOrganise == 2)
+            {
+                y = std::stof(Word);
+                Texture[TextureID] = UVTexture{ glm::vec2(x,y) };
+                TextureID++;
+                TextureOrganise = 0;
+            }
+            if (TextureOrganise == 1)
+            {
+                x = std::stof(Word);
+                TextureOrganise++;
+            }
+            if (Word == "vt") TextureOrganise++;
 
+            if (FormatOrganise == 1 || FormatOrganise == 2 || FormatOrganise == 3)
+            {
+                for (int i = 0; i < Word.length(); i++) if (Word[i] == '/') Word[i] = ' ';
+                std::stringstream WordArray(Word);
+                std::string WordFormat;
+                int WordOrganise = 0;
+                int ID = 0;
+                int TextureFormatID = 0;
+                int NormalsFormatID = 0;
+                while (WordArray >> WordFormat)
+                {
 
+                    if (WordOrganise == 2)
+                    {
+                        NormalsFormatID = std::stoi(WordFormat) - 1;
+                        Format[ID].NormalID = NormalsFormatID;
+                        Format[ID].TextureID = TextureFormatID;
+                        WordOrganise = 0;
+                    }
+                    if (WordOrganise == 1)
+                    {
+                        TextureFormatID = std::stoi(WordFormat) - 1;
+                        WordOrganise++;
+                    }
+                    if (WordOrganise == 0)
+                    {
+                        ID = std::stoi(WordFormat) - 1;
+                        WordOrganise++;
+                    }
+                }
+                if (FormatOrganise == 3) FormatOrganise = 0; else FormatOrganise++;
+            }
+            if (Word == "f") FormatOrganise++;
+        }
 
-	LoadOBJ Object = LoadOBJ(Mesh);
-	this->Indices = Object.Indices;
-	this->IndicesSize = Object.IndicesSize;
-	this->VerticesSize = Object.VerticesSize;
-	this->Vertices = Object.VertexData;
-
-
-	glGenVertexArrays(1, &this->VAO);
-	glGenBuffers(1, &this->VBO);
-	glGenBuffers(1, &this->EBO);
-	glBindVertexArray(this->VAO);
-	
-	glBindBuffer(GL_ARRAY_BUFFER, this->VBO);
-	glBufferData(GL_ARRAY_BUFFER, this->VerticesSize * sizeof(VectexArray), Vertices, GL_STATIC_DRAW);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->EBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, this->IndicesSize * sizeof(GLuint), Indices, GL_STATIC_DRAW);
-	
-	glVertexAttribPointer(
-		0,                  
-		3,                  
-		GL_FLOAT,           
-		GL_FALSE,          
-		8 * sizeof(float),                 
-		(void*)0            
-	);
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(
-		1,                  
-		3,                  
-		GL_FLOAT,          
-		GL_FALSE,           
-		8 * sizeof(float),                  
-		(void*)(3 * sizeof(float))            
-	);
-	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(
-		2,                  
-		3,                  
-		GL_FLOAT,           
-		GL_FALSE,           
-		8 * sizeof(float),                 
-		(void*)(5 * sizeof(float))       
-	);
-	glEnableVertexAttribArray(2);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindVertexArray(0);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+    }
+    Data.close();
+    for (int i = 0; i < VerticesSize; i++)
+    {
+        int TextureCreateVertexID = Format[i].TextureID;
+        int NormalsCreateVertexID = Format[i].NormalID;
+        VertexData[i] = VectexArray({ Vertices[i].Position,Texture[TextureCreateVertexID].UVTexture,Normal[NormalsCreateVertexID].Normals });
+    }
 
 }
-void Object::Active()
-{
-	if (this->istexture) glBindTexture(GL_TEXTURE_2D, this->texture);
-	glUseProgram(this->ShaderProgram);
-}
-
-void Object::Draw()
-{
-	glBindVertexArray(this->VAO);
-	glDrawElements(GL_TRIANGLES, this->IndicesSize, GL_UNSIGNED_INT, 0);
-}
-
-void Object::Delete()
-{
-	glDeleteVertexArrays(1, &VAO);
-	glDeleteVertexArrays(1, &VBO);
-	glDeleteVertexArrays(1, &EBO);
-	glDeleteTextures(1, &texture);
-	glDeleteProgram(ShaderProgram);
-}
-
