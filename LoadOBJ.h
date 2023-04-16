@@ -35,11 +35,14 @@ class LoadOBJ
 {
 public:
 	LoadOBJ(const char* File);
-	GLuint* Indices();
-	VectexArray* Vertices();
+	
+	VectexArray* VertexData;
 
 	int VerticesSize = 0;
 	int IndicesSize = 0;
+	int NoramlSize = 0;
+	int TextureSize = 0;
 	const char* FilePath;
+	GLuint* Indices;
 };
 
