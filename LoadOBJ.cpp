@@ -13,8 +13,8 @@ LoadOBJ::LoadOBJ(const char* File)
         while (LineArray >> Word) {
             if (Word == "v") VerticesSize++;
             if (Word == "f") IndicesSize += 3;
-            if (Word == "vn") NoramlSize++;
-            if (Word == "vt") TextureSize++;
+            if (Word == "vn") NoramlSize ++;
+            if (Word == "vt") TextureSize ++;
         }
     }
     DataSize.close();
