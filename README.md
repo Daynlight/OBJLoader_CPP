@@ -13,13 +13,13 @@ Vectex
 1. Import header File
 * #include "path.LoadOBJ.h"
 2. Create Object
-* LoadOBJ ObjectName = LoadOBJ("PathToOBJFile");
+* LoadOBJ* ObjectName = new LoadOBJ("PathToOBJFile");
 3. Extract Indices from OBJ File
-* int* ObjectIndicesName = ObjectName.Indices();
+* int* ObjectIndicesName = ObjectName->Indices;
 4. Export VertexArray from OBJ File
-* VectexArray* ObjectVerticesName = ObjectName.Vertices();
+* VectexArray* ObjectVerticesName = ObjectName->VertexData;
 5. Object VertexSize
-* ObjectName.VerticesSize
+* ObjectName->VerticesSize
 6. Indices Size
-* ObjectName.IndicesSize
+* ObjectName->IndicesSize
 <img width="100%" src="https://i.pinimg.com/originals/2b/07/f6/2b07f62987e987d4e53e84aa8b963b83.gif" />
