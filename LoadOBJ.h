@@ -35,7 +35,7 @@ class LoadOBJ
 {
 public:
 	LoadOBJ(const char* File);
-	
+
 	VectexArray* VertexData;
 
 	int VerticesSize = 0;
@@ -45,4 +45,3 @@ public:
 	const char* FilePath;
 	GLuint* Indices;
 };
-

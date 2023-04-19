@@ -4,8 +4,8 @@
 int main()
 {
 	LoadOBJ Map = LoadOBJ("Assets/Map/object.obj");
-	VectexArray* Mapa = Map.Vertices();
-	GLuint* Mapind = Map.Indices();
+	VectexArray* Mapa = Map.VertexData;
+	GLuint* Mapind = Map.Indices;
 	for(int i =0;i<Map.VerticesSize;i++) std::cout 
 	<< glm::to_string(Mapa[i].Poses) << " " << glm::to_string(Mapa[i].Texures) 
 	<< " " << glm::to_string(Mapa[i].Normals) << std::endl;
